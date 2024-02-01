@@ -141,8 +141,7 @@ public:
 		IH.BitCount = S.BitCount();
 
 		std::vector<std::uint8_t>R;
-		R.insert(R.end(),(std::uint8_t*) &FH,(std::uint8_t*) &FH +2);
-		R.insert(R.end(),(std::uint8_t*) &FH+2,(std::uint8_t*) &FH + sizeof(FH));
+		R.insert(R.end(),(std::uint8_t*) &FH,(std::uint8_t*) &FH + sizeof(FH));
 		R.insert(R.end(), (std::uint8_t*)&IH, (std::uint8_t*)&IH + sizeof(IH));
 		R.insert(R.end(), S.begin(), S.end());
 
