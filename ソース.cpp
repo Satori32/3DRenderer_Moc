@@ -109,7 +109,7 @@ public:
 		//S.Index(X, Y).G = G;
 		//S.Index(X, Y).B = B;
 		//typename Surface24::refRGB Re = S.Index(X, Y);
-		typename Surface24::refRGB Re{ S.Index(X, Y) };
+		typename Surface24::refRGB Re{ S.Index(X, Y).B, S.Index(X, Y).G, S.Index(X, Y).R };
 		Re.R = r;
 		Re.G = g;
 		Re.B = b;
