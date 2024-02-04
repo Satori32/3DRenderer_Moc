@@ -6,6 +6,8 @@
 //logical address is if need width to need "W*3" to phisical address?? because Indexer is byte access to it.
 //i try to data align to 4.
 
+//please kill the catmal method.
+
 class Surface24 {
 public:
 	struct refRGB{
