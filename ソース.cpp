@@ -16,7 +16,7 @@ public:
 	};
 
 	bool Resize(std::uintmax_t Width, std::uintmax_t Height) {
-		std::uintmax_t V = (4-(Width*3)%4);
+		std::uintmax_t V =(4-((Width*3)%4))%4;
 		P = V ? V : 0;
 		S.clear();
 		S.resize(Height*((Width*3)+P));
@@ -101,11 +101,15 @@ public:
 		
 	}
 
-	bool SetPixel(std::uint32_t X, std::uint32_t Y, std::uint8_t R, std::uint8_t G, std::uint8_t B) {
-		auto Re = S.Index(X, Y);
-		Re.R = R;
-		Re.G = G;
-		Re.B = B;
+	bool SetPixel(std::uint32_t X, std::uint32_t Y, std::uint8_t r, std::uint8_t g, std::uint8_t b) {
+
+		//S.Index(X, Y).R = R;
+		//S.Index(X, Y).G = G;
+		//S.Index(X, Y).B = B;
+		typename Surface24::refRGB Re = S.Index(X, Y);
+		Re.R = r;
+		Re.G = g;
+		Re.B = b;
 		return true;
 	}
 
@@ -131,8 +135,8 @@ public:
 		FileHeader FH;
 		InfoHeader IH;
 
-		FH.FileSize = sizeof(FH) + sizeof(IH) + S.Size();
-		FH.PixelPosition = sizeof(FH) + sizeof(IH);
+		FH.FileSize = sizeof(FH) + sizeof(IH) + S.Size()-2;//it -2 is memory alignment ploblem
+		FH.PixelPosition = sizeof(FH) + sizeof(IH)-2;
 		
 
 		IH.Size = sizeof(IH);
@@ -141,7 +145,8 @@ public:
 		IH.BitCount = S.BitCount();
 
 		std::vector<std::uint8_t>R;
-		R.insert(R.end(),(std::uint8_t*) &FH,(std::uint8_t*) &FH + sizeof(FH));
+		R.insert(R.end(),(std::uint8_t*) &FH,(std::uint8_t*) &FH + 2);
+		R.insert(R.end(),(std::uint8_t*) &FH+4,(std::uint8_t*) &FH + sizeof(FH));
 		R.insert(R.end(), (std::uint8_t*)&IH, (std::uint8_t*)&IH + sizeof(IH));
 		R.insert(R.end(), S.begin(), S.end());
 
@@ -163,7 +168,8 @@ int main(){
 
 	BITMAP24 B;
 	B.Resize(16, 16);
-	B.SetPixel(0, 0, 1, 0, 0);
+	B.SetPixel(0, 0, 256, 256, 256);
+	B.SetPixel(1, 0, 256, 0, 256);
 	auto M = B.CreateStructuer();
 
 	std::ofstream of("Hoge.bmp", std::ios::binary);
