@@ -35,10 +35,10 @@ public:
 	}
 
 	refRGB Index(std::uintmax_t X, std::uintmax_t Y) {
-		if (InRange(X, Y) == false) { throw std::out_of_range("Surface16::Index();"); }
-		return { S[(Y * ((W * 3) + P)) + X] ,S[(Y * ((W * 3) + P)) + X+1] ,S[(Y* ((W * 3) + P)) + X+2]};
-
-
+		if (InRange(X, Y) == false) { throw std::out_of_range("Surface24::Index();"); }
+		std::uintmax_t PP = (Y * ((W * 3)+P)) + X;
+		
+		return { S[PP],S[PP+1],S[PP+2]};
 	}
 	std::uintmax_t BitCount() {
 		return 24;
@@ -82,7 +82,7 @@ public:
 		std::uint32_t FileSize = 0;
 		std::uint16_t ResurvedA = 0;
 		std::uint16_t ResurvedB = 0;
-		std::uint32_t PixelPosition = 0;
+		std::uint32_t PixelPosition = sizeof(FileHeader)+sizeof(InfoHeader)-2;
 	};
 	struct InfoHeader {
 		std::uint32_t Size = 40;
@@ -103,16 +103,13 @@ public:
 		
 	}
 
-	bool SetPixel(std::uint32_t X, std::uint32_t Y, std::uint8_t r, std::uint8_t g, std::uint8_t b) {
+	bool SetPixel(const std::uint32_t& X, const std::uint32_t& Y, const std::uint8_t& R, const std::uint8_t& G, const std::uint8_t& B) {
 
-		//S.Index(X, Y).R = R;
-		//S.Index(X, Y).G = G;
-		//S.Index(X, Y).B = B;
-		//typename Surface24::refRGB Re = S.Index(X, Y);
-		typename Surface24::refRGB Re{ S.Index(X, Y).B, S.Index(X, Y).G, S.Index(X, Y).R };
-		Re.R = r;
-		Re.G = g;
-		Re.B = b;
+		Surface24::refRGB Re{S.Index(X, Y)};
+		Re.R = R;
+		Re.G = G;
+		Re.B = B;
+
 		return true;
 	}
 
@@ -171,11 +168,11 @@ int main(){
 
 	BITMAP24 B;
 	B.Resize(16, 16);
-	B.SetPixel(0, 0, 256, 256, 256);
-	B.SetPixel(1, 0, 256, 0, 256);
+	B.SetPixel(0, 0, 255, 255, 255);
+	B.SetPixel(1, 0, 255, 0, 255);
 	auto M = B.CreateStructuer();
 
-	std::ofstream of("Hoge.bmp", std::ios::binary);
+	std::ofstream of("Hoge.bmp", std::ios::binary); 
 	of.write((const char*)&M[0], M.size());
 
 	return 0;
