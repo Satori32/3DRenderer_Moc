@@ -36,7 +36,7 @@ public:
 
 	refRGB Index(std::uintmax_t X, std::uintmax_t Y) {
 		if (InRange(X, Y) == false) { throw std::out_of_range("Surface24::Index();"); }
-		std::uintmax_t PP = (Y * ((W * 3)+P)) + X;
+		std::uintmax_t PP = (Y * ((W * 3)+P)) + X*3;
 		
 		return { S[PP],S[PP+1],S[PP+2]};
 	}
