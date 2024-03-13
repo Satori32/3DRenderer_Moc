@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <fstream>
 
+#include <Windows.h>
+
 //logical address is if need width to need "W*3" to phisical address?? because Indexer is byte access to it.
 //i try to data align to 4.
 
@@ -105,7 +107,7 @@ public:
 
 	bool SetPixel(const std::uint32_t& X, const std::uint32_t& Y, const std::uint8_t& R, const std::uint8_t& G, const std::uint8_t& B) {
 
-		Surface24::refRGB Re{S.Index(X, Y)};
+		Surface24::refRGB Re{S.Index(X, S.Height()-Y-1)};
 		Re.R = R;
 		Re.G = G;
 		Re.B = B;
@@ -114,7 +116,7 @@ public:
 	}
 
 	Surface24::refRGB Index(std::size_t X, std::size_t Y) {
-		return S.Index(X, Y);
+		return S.Index(X, S.Height()-Y-1);
 	}
 	std::size_t Pod() {
 		return S.Pod();
@@ -170,6 +172,7 @@ int main(){
 	B.Resize(16, 16);
 	B.SetPixel(0, 0, 255, 255, 255);
 	B.SetPixel(1, 0, 255, 0, 255);
+	B.SetPixel(0, B.Height() - 1, 255, 0, 0);
 	auto M = B.CreateStructuer();
 
 	std::ofstream of("Hoge.bmp", std::ios::binary); 
