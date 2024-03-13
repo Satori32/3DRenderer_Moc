@@ -69,6 +69,8 @@ public:
 	typename std::vector<std::uint8_t>::iterator end() {
 		return S.end();
 	}
+
+	const std::uint8_t* Data() { return S.data(); }
 protected:
 	std::uintmax_t P = 0;
 	std::uintmax_t W = 0;
@@ -154,6 +156,11 @@ public:
 
 		return R;
 	}
+	HBITMAP GetHBITMAP() {
+		HBITMAP H=nullptr;
+		H = CreateBitmap(S.Width(), S.Height(), 1, S.BitCount(), S.Data());
+		return H;
+	}
 
 protected:
 	Surface24 S;
@@ -177,6 +184,10 @@ int main(){
 
 	std::ofstream of("Hoge.bmp", std::ios::binary); 
 	of.write((const char*)&M[0], M.size());
+
+	HBITMAP H = B.GetHBITMAP();// now under testing.
+	DeleteObject(H);
+	H = nullptr;
 
 	return 0;
 
